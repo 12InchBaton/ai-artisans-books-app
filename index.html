@@ -277,7 +277,7 @@ let db=null, assets=null, sample=null, sampleImages=false, sampleOff=false, samp
    Rows are never removed or reordered (a deleted document keeps its row, deleted = "yes"). Meta!B1 changes after every write.
    In claude.ai the page reaches the Sheet through the viewer's Google Sheets connector; inside Telegram, through the Apps Script web app. */
 const BOOKS_SHEET_ID=""; /*@sheet-id*/
-const MINIAPP_API=""; /*@miniapp-api*/
+const MINIAPP_API="https://script.google.com/macros/s/AKfycbxFRDJj_QCQ9fsNZBjDAZZ4f_mYKuH63FAitV0s5-BZgpSvu-p1wcgzjT-l-TKvcM_0/exec"; /*@miniapp-api*/
 const TGW = window.Telegram?.WebApp;
 const ENV = TGW?.initData ? "telegram" : (window.claude?.use ? "claude" : "none");
 const LAZY_THUMB="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
@@ -690,7 +690,7 @@ function renderSetup(){
     </div></section>
   <section class="panel"><div><h3>Where the books are kept</h3><p class="sub">${ENV==="telegram"?"You're in the Telegram Mini App. It works on the same books as the page on claude.ai.":"Your Google Sheet holds the books, so this page, the Telegram Mini App and the receipts bot always show the same thing."}</p></div>
     <div class="cat-list">
-      <div><b>Google Sheet</b><span>${BOOKS_SHEET_ID?`<a href="https://docs.google.com/spreadsheets/d/${esc(BOOKS_SHEET_ID)}/edit" target="_blank" rel="noopener" style="color:var(--accent)">AI Artisans Receipts Inbox ↗</a>, tab “Books”. `:"Tab “Books” of your Google Sheet. "}One row per entry, invoice and claim. Don't sort, delete or reorder its rows; edit the books here instead. Google's version history can restore an earlier copy.</span></div>
+      <div><b>Google Sheet</b><span>${BOOKS_SHEET_ID?`<a href="https://docs.google.com/spreadsheets/d/${esc(BOOKS_SHEET_ID)}/edit" target="_blank" rel="noopener" style="color:var(--accent)">AI Artisans Books ↗</a>, tab “Books”. `:"Tab “Books” of your Google Sheet. "}One row per entry, invoice and claim. Don't sort, delete or reorder its rows; edit the books here instead. Google's version history can restore an earlier copy.</span></div>
       <div><b>Telegram bot</b><span>Tap ✅ Log it and the receipt goes straight into the books. It waits in Receipts to review only if it looks like a duplicate or a detail is missing, such as the SGD amount for a foreign currency.</span></div>
       <div><b>Updates</b><span>Changes made elsewhere show up within about 15 seconds while this page is open.</span></div>
     </div></section>`;
@@ -1371,7 +1371,7 @@ function loadErrMsg(e){
     server_not_connected:"Add the Google Sheets connector in claude.ai Settings › Connectors, then reload this page.",
     needs_reauth:"Reconnect Google Sheets in claude.ai Settings › Connectors, then reload this page.",
     selection_required:"You have more than one Google Sheets connection. Choose one when claude.ai asks, then try again.",
-    tool_error:"Google Sheets couldn't open the books' Sheet. Check that your Google account can open “AI Artisans Receipts Inbox”.",
+    tool_error:"Google Sheets couldn't open the books' Sheet. Check that your Google account can open “AI Artisans Books”.",
     not_allowed:"This Telegram account isn't allowed to open the books.",
     no_api:"The Mini App isn't linked to the Sheet yet.",
     network:"Couldn't reach Google. Check your connection and try again."
