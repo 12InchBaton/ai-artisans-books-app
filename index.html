@@ -886,7 +886,7 @@ async function handleReceipt(file){
     if(e?.code==="cancelled") return;
     console.warn("scan",e);
     const m={not_granted:"Claude wasn't allowed to read it. Reload the page and choose Allow when asked.",sampling_disabled:"Claude isn't available on this account right now.",images_unavailable:"This view can't send images to Claude. Open the page in the Claude app or claude.ai.",rate_limited:"Too many requests right now. Try again in a minute.",invalid_json:"Couldn't read it clearly. Try a sharper photo, or fill in the details.",image_rejected:"That image couldn't be read. Try a clearer photo.",refused:"Claude couldn't read this document.",session_expired:"Sign in to Claude again, then retry.",no_key:"Scanning in the Mini App needs the Anthropic key in the Apps Script's settings. Fill in the details below for now.",upstream_error:"Claude didn't answer. Try again in a moment.",network:"Couldn't reach Google. Check your connection and try again."};
-    st.textContent = keep + (m[e?.code] || `Couldn't read it (${e?.code||"error"}). Try again, or fill in the details.`);
+    st.textContent = keep + (m[e?.code] || `Couldn't read it (${[e?.code||"error",e?.message].filter(Boolean).join(": ").slice(0,160)}). Try again, or fill in the details.`);
     if(["not_granted","sampling_disabled","images_unavailable"].includes(e?.code)) sampleOff=true;
   }
 }
@@ -1040,7 +1040,7 @@ async function scanInbox(id, imgs){
   const ref=db.collection("inbox").doc(id);
   try{ const r=await sample.json(detectPrompt(imgs.length),{images:imgs}); await ref.update({status:"ready", fields:normFields(r), error:null}); }
   catch(e){ console.warn("scan",e); if(["not_granted","sampling_disabled","images_unavailable"].includes(e?.code)) sampleOff=true;
-    await ref.update({status:"unread", error:SCAN_ERR[e?.code]||`Couldn't read it (${e?.code||"error"}). Fill in the details by hand.`}).catch(()=>{}); }
+    await ref.update({status:"unread", error:SCAN_ERR[e?.code]||`Couldn't read it (${[e?.code||"error",e?.message].filter(Boolean).join(": ").slice(0,160)}). Fill in the details by hand.`}).catch(()=>{}); }
 }
 async function rescanInbox(id){
   const it=S.inbox.find(x=>x.id===id); if(!it||!sample) return;
@@ -1144,7 +1144,7 @@ async function handleInvoiceDoc(file){
       st.textContent=keep+"Details filled in. Check them, then save.";
     }
   }catch(e){ if(e?.code==="cancelled") return; if(["not_granted","sampling_disabled","images_unavailable"].includes(e?.code)) sampleOff=true;
-    st.textContent=keep+(SCAN_ERR[e?.code]||`Couldn't read it (${e?.code||"error"}). Fill in the details.`); }
+    st.textContent=keep+(SCAN_ERR[e?.code]||`Couldn't read it (${[e?.code||"error",e?.message].filter(Boolean).join(": ").slice(0,160)}). Fill in the details.`); }
 }
 async function saveInvoice(){
   const msg=$("#i-msg"); msg.textContent="";
